@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,10 @@ import com.aurionpro.mappings.repository.CourseRespository;
 import com.aurionpro.mappings.repository.InstructorRepository;
 import com.aurionpro.mappings.repository.StudentRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CourseServiceImpl implements CourseService{
 	
 	@Autowired
@@ -25,6 +30,8 @@ public class CourseServiceImpl implements CourseService{
 	
 	@Autowired
 	private CourseRespository courseRespository;
+	
+	private static final Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
 	
 	@Autowired
 	private InstructorRepository instructorRepository;
@@ -73,18 +80,6 @@ public class CourseServiceImpl implements CourseService{
 	@Override
 	public List<CourseDto> getCourseInstructor(int instructorId) {
 		Instructor instructor = instructorRepository.findById(instructorId).orElseThrow(() -> new NullPointerException("Instructor Not Found"));
-		
-//		List<Course> existingCourse = instructor.getCourses();
-//		
-//		List<CourseDto> dbCourse = new ArrayList<>();
-//		
-//		existingCourse.forEach((course) -> {
-//			CourseDto dbCourseDto = toCourseDtoMapper(course);
-//			dbCourse.add(dbCourseDto);
-//		});
-//		
-//		return dbCourse;
-		
 		return instructor.getCourses().stream()
 					.map(this :: toCourseDtoMapper)
 					.collect(Collectors.toList());

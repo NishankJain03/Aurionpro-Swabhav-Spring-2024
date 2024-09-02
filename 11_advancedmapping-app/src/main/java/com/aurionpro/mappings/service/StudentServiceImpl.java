@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +25,10 @@ import com.aurionpro.mappings.repository.CourseRespository;
 import com.aurionpro.mappings.repository.InstructorRepository;
 import com.aurionpro.mappings.repository.StudentRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class StudentServiceImpl implements StudentService{
 
 	@Autowired
@@ -34,6 +39,8 @@ public class StudentServiceImpl implements StudentService{
 	
 	@Autowired
 	private InstructorRepository instructorRepository;
+	
+	private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 	
 	@Override
 	public List<Student> getAllStudent() {
@@ -70,7 +77,8 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	public StudentDto addStudent(Student student) {
 		Student dbStudent = studentRepository.save(student);
-		return toStudentDtoMapper(student);
+		logger.info("Student Added Successfully");
+		return toStudentDtoMapper(dbStudent);
 	}
 	@Override
 	public PageResponse<StudentDto> getAllStudents(int pageNumber, int pageSize) {
